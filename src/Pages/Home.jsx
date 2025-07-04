@@ -8,7 +8,7 @@ const Home = () => {
     <>
     <div className="Home w-screen">
       <Navbar/>
-      <div className='flex'>
+      <div className='flex flex-col md:flex-row '>
       <CreateNote/>
       <YourNotes/>
       </div>

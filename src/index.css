@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+
+/* ===== Scrollbar Style: Thin Black ===== */
+.thin-black-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+.thin-black-scrollbar::-webkit-scrollbar-thumb {
+  background-color: black;
+  border-radius: 4px;
+}
+.thin-black-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: black transparent;
+}
+
+/* ===== Modal Zoom Animation ===== */
+@keyframes fadeZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeZoom {
+  animation: fadeZoom 0.3s ease-out forwards;
+}
+
+
