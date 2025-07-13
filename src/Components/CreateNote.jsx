@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
-const CreateNote = () => {
+const CreateNote = ({onNoteCreated}) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
+ const { notes,fetchNotes } = useContext(AuthContext);
   const handleCreateNote = async () => {
     if (!title || !content) {
       alert("Please fill in both title and content");
@@ -27,6 +28,7 @@ const CreateNote = () => {
       alert("Note created successfully!");
       setTitle("");
       setContent("");
+      fetchNotes();
     } catch (error) {
       console.error("Error creating note:", error);
       alert("Failed to create note");
@@ -53,7 +55,7 @@ const CreateNote = () => {
           ></textarea>
         </div>
         <button
-          onClick={handleCreateNote}
+          onClick={handleCreateNote} 
           className="p-2 bg-yellow-300 text-gray-600 w-full mt-3 border-0 cursor-pointer"
         >
           Create Note
