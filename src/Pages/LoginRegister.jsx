@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FileClock } from "lucide-react";
-const Login = () => {
-  const [currState, setCurrState] = useState("Sign In");
+import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
+import { AuthContext } from "../context/AuthContext";
 
-  // Form data state for two-way binding
+const LoginRegister = () => {
+  const [currState, setCurrState] = useState("Sign In");
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,15 +24,41 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Aap yaha form validation ya API call bhi add kar sakte hain
+
+    try {
+      if (currState === "Sign Up") {
+        await axios.post("/auth/signup", {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        });
+
+        alert("Signup successful! Please log in.");
+        setCurrState("Sign In");
+      } else {
+        const res = await axios.post("/auth/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        login(res.data.token); // Save token
+        alert("Login successful!");
+        navigate("/dashboard"); // Go to Dashboard
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Something went wrong!");
+    }
   };
 
   return (
     <>
-      <div className=" flex items-center gap-2 px-5 loginNav absolute z-20 top-0 left-0 bg-white w-full h-[60px]"><FileClock className="text-yellow-300 w-10 h-10" /><p className="font-bold text-2xl text-gray-600 ">Notes</p></div>
+      <div className="flex items-center gap-2 px-5 loginNav absolute z-20 top-0 left-0 bg-white w-full h-[60px]">
+        <FileClock className="text-yellow-300 w-10 h-10" />
+        <p className="font-bold text-2xl text-gray-600">Notes</p>
+      </div>
+
       <div className="flex items-center justify-center w-full min-h-screen bg-gray-100 px-4">
         <div className="flex flex-col md:flex-row w-full max-w-4xl shadow-lg rounded-lg overflow-hidden items-stretch">
           {/* Left Section */}
@@ -131,4 +162,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginRegister;
