@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { Delete, DeleteIcon, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import axios from "axios";
 
 const YourNotes = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeNote, setActiveNote] = useState(null);
   const { notes, fetchNotes } = useContext(AuthContext);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [noteToEdit, setNoteToEdit] = useState(null);
+
   const openModal = (note) => {
     setActiveNote(note);
     setIsModalOpen(true);
@@ -17,14 +20,9 @@ const YourNotes = () => {
     setActiveNote(null);
   };
 
-  // Fetch notes when the component mounts
-  // This will call the fetchNotes function from AuthContext to get the user's notes.
   useEffect(() => {
     fetchNotes();
   }, []);
-
-  // Function to handle note deletion
-  // This function will be called when the user clicks the delete button on a note.
 
   const handleDelete = async (id) => {
     const confirm = window.confirm(
@@ -42,12 +40,42 @@ const YourNotes = () => {
       });
 
       alert("Note deleted successfully!");
-      fetchNotes(); // 🔁 refresh updated list
+      fetchNotes();
       setIsModalOpen(false);
       setActiveNote(null);
     } catch (err) {
       console.error("Delete failed", err);
       alert("Failed to delete note");
+    }
+  };
+
+  const handleEditClick = (note) => {
+    setNoteToEdit(note);         // ✅ Set full note object
+    setEditModalOpen(true);
+    setIsModalOpen(false);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/posts/${noteToEdit._id}`,
+        {
+          title: noteToEdit.title,
+          content: noteToEdit.content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      alert("Note updated successfully!");
+      setEditModalOpen(false);
+      fetchNotes(); // Refresh updated notes
+    } catch (err) {
+      console.error("Update failed", err);
+      alert("Failed to update note");
     }
   };
 
@@ -73,17 +101,15 @@ const YourNotes = () => {
               <p className="font-bold text-sm text-gray-600">
                 {new Date(note.createdAt).toLocaleString()}
               </p>
-              {/* 🗑️ Delete Button (top-right) */}
             </div>
           ))}
         </div>
       </div>
 
-      {/* POPUP MODAL */}
+      {/* VIEW MODAL */}
       {isModalOpen && activeNote && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="bg-white w-11/12 md:w-1/2 h-1/2 rounded-xl p-5 shadow-2xl border border-gray-300 animate-fadeZoom relative">
-            {/* ❌ Close Button */}
             <div className="absolute top-2 right-3">
               <button
                 onClick={closeModal}
@@ -93,23 +119,66 @@ const YourNotes = () => {
               </button>
             </div>
 
-            {/* ✅ Title */}
             <h3 className="font-bold text-2xl text-gray-700 mb-4 mt-2">
               {activeNote.title}
             </h3>
 
-            {/* ✅ Content + Delete */}
             <div className="w-full h-[70%] overflow-y-scroll thin-black-scrollbar pr-2 relative">
               <p className="text-sm text-gray-700 leading-relaxed">
                 {activeNote.content}
               </p>
 
-              {/* ✅ Delete Button (bottom right inside modal) */}
               <button
                 onClick={() => handleDelete(activeNote._id)}
                 className="absolute bottom-0 right-0 m-2 text-red-500 font-bold text-lg cursor-pointer"
               >
                 <Trash />
+              </button>
+
+              <button
+                onClick={() => handleEditClick(activeNote)}
+                className="absolute bottom-0 left-0 m-2 text-red-500 font-bold text-lg cursor-pointer"
+              >
+                ✏️ Edit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT MODAL */}
+      {editModalOpen && noteToEdit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="bg-white w-11/12 md:w-1/2 h-1/2 rounded-xl p-5 shadow-2xl border border-gray-300 animate-fadeZoom relative">
+            <h2 className="text-lg font-bold mb-4">Edit Note</h2>
+            <input
+              type="text"
+              className="w-full mb-3 px-4 py-2 border rounded"
+              value={noteToEdit.title || ""}
+              onChange={(e) =>
+                setNoteToEdit({ ...noteToEdit, title: e.target.value })
+              }
+            />
+            <textarea
+              className="w-full mb-3 px-4 py-2 border rounded"
+              value={noteToEdit.content || ""}
+              rows={5}
+              onChange={(e) =>
+                setNoteToEdit({ ...noteToEdit, content: e.target.value })
+              }
+            ></textarea>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setEditModalOpen(false)}
+                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="px-4 py-2 rounded bg-yellow-400 hover:bg-yellow-500 text-white"
+              >
+                Update
               </button>
             </div>
           </div>
