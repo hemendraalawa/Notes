@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const [notes, setNotes] = useState([]);
+  const [user, setUser] = useState(null);
   const login = (newToken) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
@@ -29,10 +30,38 @@ const AuthProvider = ({ children }) => {
     }
   };
 
- 
+  const fetchUser = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUser(res.data);
+      console.log("USER FETCHED", res.data);
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+    }
+  };
+
+  useEffect(() => {
+  if (token) {
+    fetchUser();
+  }
+}, [token]);
+
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, notes, fetchNotes }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        login,
+        logout,
+        notes,
+        fetchNotes,
+        user,
+        setUser,
+        fetchUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

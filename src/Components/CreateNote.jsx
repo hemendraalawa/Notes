@@ -56,7 +56,7 @@ const CreateNote = ({onNoteCreated}) => {
         </div>
         <button
           onClick={handleCreateNote} 
-          className="p-2 bg-yellow-300 text-gray-600 w-full mt-3 border-0 cursor-pointer"
+          className="p-2 bg-yellow-300 text-gray-600 w-full mt-3 border-0 cursor-pointer hover:bg-yellow-400"
         >
           Create Note
         </button>
