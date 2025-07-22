@@ -3,12 +3,13 @@ import { AuthContext } from "../context/AuthContext";
 import { Trash } from "lucide-react";
 import axios from "axios";
 
-const YourNotes = () => {
+const YourNotes = ({ searchQuery }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeNote, setActiveNote] = useState(null);
   const { notes, fetchNotes } = useContext(AuthContext);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
+  const [searchNote, setSearchNote] = useState([]);
 
   const openModal = (note) => {
     setActiveNote(note);
@@ -50,7 +51,7 @@ const YourNotes = () => {
   };
 
   const handleEditClick = (note) => {
-    setNoteToEdit(note);         // ✅ Set full note object
+    setNoteToEdit(note);
     setEditModalOpen(true);
     setIsModalOpen(false);
   };
@@ -72,12 +73,37 @@ const YourNotes = () => {
 
       alert("Note updated successfully!");
       setEditModalOpen(false);
-      fetchNotes(); // Refresh updated notes
+      fetchNotes();
     } catch (err) {
       console.error("Update failed", err);
       alert("Failed to update note");
     }
   };
+
+  const fetchSearchNotes = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/posts/search?q=${searchQuery}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setSearchNote(res.data);
+    } catch (err) {
+      console.error("Error fetching searched notes:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (searchQuery) {
+      fetchSearchNotes();
+    }
+  }, [searchQuery]);
+
+  // Notes to display: search results if query exists, otherwise all notes
+  const notesToDisplay = searchQuery ? searchNote : notes;
 
   return (
     <>
@@ -86,23 +112,29 @@ const YourNotes = () => {
         <h3 className="text-2xl font-bold text-gray-600 mb-4">Your Notes</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {notes.map((note) => (
-            <div
-              key={note._id}
-              onClick={() => openModal(note)}
-              className="NoteCard bg-white w-full p-5 border border-gray-600 cursor-pointer rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
-            >
-              <h3 className="font-bold text-xl text-gray-600 mb-2">
-                {note.title}
-              </h3>
-              <div className="w-full h-24 overflow-y-scroll thin-black-scrollbar my-2">
-                <p className="text-sm">{note.content}</p>
+          {notesToDisplay.length > 0 ? (
+            notesToDisplay.map((note) => (
+              <div
+                key={note._id}
+                onClick={() => openModal(note)}
+                className="NoteCard bg-white w-full p-5 border border-gray-600 cursor-pointer rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
+                <h3 className="font-bold text-xl text-gray-600 mb-2">
+                  {note.title}
+                </h3>
+                <div className="w-full h-24 overflow-y-scroll thin-black-scrollbar my-2">
+                  <p className="text-sm">{note.content}</p>
+                </div>
+                <p className="font-bold text-sm text-gray-600">
+                  {new Date(note.createdAt).toLocaleString()}
+                </p>
               </div>
-              <p className="font-bold text-sm text-gray-600">
-                {new Date(note.createdAt).toLocaleString()}
-              </p>
+            ))
+          ) : (
+            <div className="col-span-full text-center text-gray-500 font-semibold text-lg py-10">
+              No match found.
             </div>
-          ))}
+          )}
         </div>
       </div>
 

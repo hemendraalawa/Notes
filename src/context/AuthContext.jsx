@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);
-      console.log("USER FETCHED", res.data);
+      // console.log("USER FETCHED", res.data);
     } catch (err) {
       console.error("Failed to fetch user:", err);
     }

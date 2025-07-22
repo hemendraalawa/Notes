@@ -1,7 +1,6 @@
 import React, { useState, useRef, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import { ThemeContext } from "../context/ThemeContext";
 import {
   FileClock,
   Search,
@@ -14,14 +13,13 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ searchQuery, setSearchQuery }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState(null);
   const [refreshKey, setRefreshKey] = useState(Date.now());
 
   const { user, setUser, fetchUser } = useContext(AuthContext);
-  const { darkMode, toggleTheme } = useContext(ThemeContext);
 
   const fileInputRef = useRef();
   const navigate = useNavigate();
@@ -81,6 +79,8 @@ const Navbar = () => {
               className="bg-white w-full p-2 pl-10 border border-gray-600 outline-none rounded-md"
               placeholder="Search"
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Search className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-600 w-4 h-4" />
           </div>
@@ -89,17 +89,19 @@ const Navbar = () => {
         {/* Right: Icons (Desktop Only) */}
         <div className="hidden md:flex items-center gap-4">
           <RotateCcw className="text-gray-600 cursor-pointer" />
-          <button
+          {/* <button
             onClick={toggleTheme}
             className="p-2 rounded cursor-pointer"
           >
-            {darkMode ? <Moon /> : <Sun />}
-          </button>
+            {darkMode ? <Sun /> : <Moon />}
+          </button> */}
           <img
             src={
-              user?.profilePhoto
-                ? `http://localhost:5000${user.profilePhoto}?k=${refreshKey}`
-                : <CircleUserRound/>
+              user?.profilePhoto ? (
+                `http://localhost:5000${user.profilePhoto}?k=${refreshKey}`
+              ) : (
+                <CircleUserRound />
+              )
             }
             alt="Profile"
             className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 shadow cursor-pointer"
@@ -221,30 +223,6 @@ const Navbar = () => {
               Logout
             </button>
           </div>
-
-          {/* Username */}
-
-          {/* Password Change */}
-          {/* <div className="space-y-3">
-            <input
-              type="password"
-              placeholder="Current Password"
-              className="w-full px-3 py-2 border rounded"
-            />
-            <input
-              type="password"
-              placeholder="New Password"
-              className="w-full px-3 py-2 border rounded"
-            />
-            <input
-              type="password"
-              placeholder="Confirm New Password"
-              className="w-full px-3 py-2 border rounded"
-            />
-            <button className="w-full px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500">
-              Change Password
-            </button>
-          </div> */}
         </div>
       )}
     </>

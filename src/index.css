@@ -1,6 +1,4 @@
 @import "tailwindcss";
-
-
 /* ===== Scrollbar Style: Thin Black ===== */
 .thin-black-scrollbar::-webkit-scrollbar {
   width: 2px;
@@ -29,5 +27,8 @@
 .animate-fadeZoom {
   animation: fadeZoom 0.3s ease-out forwards;
 }
+
+
+
 
 
