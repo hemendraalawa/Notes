@@ -40,7 +40,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/users/upload-photo",
+        "https://notes-backend-e62d.onrender.com/api/users/upload-photo",
         formData,
         {
           headers: {
