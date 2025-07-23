@@ -3,6 +3,8 @@ import { FileClock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+
 
 const LoginRegister = () => {
   const [currState, setCurrState] = useState("Sign In");
@@ -149,9 +151,15 @@ const LoginRegister = () => {
                     />
                     Remember Me
                   </label>
-                  <a href="#" className="text-yellow-400 hover:underline">
+                  {/* <a href="#" className="text-yellow-400 hover:underline">
                     Forget Password?
-                  </a>
+                  </a> */}
+                  <Link
+                    to="/forgot-password"
+                    className="text-yellow-400 hover:underline"
+                  >
+                    Forgot Password?
+                  </Link>
                 </div>
               )}
             </form>
