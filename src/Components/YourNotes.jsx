@@ -132,7 +132,7 @@ const YourNotes = ({ searchQuery }) => {
             ))
           ) : (
             <div className="col-span-full text-center text-gray-500 font-semibold text-lg py-10">
-              No match found.
+              No Data Found.😒🤣
             </div>
           )}
         </div>
