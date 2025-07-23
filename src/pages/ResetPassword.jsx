@@ -21,7 +21,7 @@ const ResetPassword = () => {
 
   try {
     setLoading(true);
-    const res = await axios.post(`http://localhost:5000/api/auth/reset-password/${token}`, {
+    const res = await axios.post(`https://notes-backend-e62d.onrender.com/api/auth/reset-password/${token}`, {
       password: newPassword,
     });
 
