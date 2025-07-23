@@ -16,7 +16,7 @@ const CreateNote = ({onNoteCreated}) => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/posts", // 🔁 Replace with your backend URL if deployed
+        "https://notes-backend-e62d.onrender.com/api/posts", // 🔁 Replace with your backend URL if deployed
         { title, content },
         {
           headers: {
