@@ -19,7 +19,7 @@ const AuthProvider = ({ children }) => {
   const fetchNotes = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/posts", {
+      const res = await axios.get("https://notes-backend-e62d.onrender.com/api/posts", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -32,7 +32,7 @@ const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/users/me", {
+      const res = await axios.get("https://notes-backend-e62d.onrender.com/api/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(res.data);
