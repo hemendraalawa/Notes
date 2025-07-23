@@ -34,7 +34,7 @@ const YourNotes = ({ searchQuery }) => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://localhost:5000/api/posts/${id}`, {
+      await axios.delete(`https://notes-backend-e62d.onrender.com/api/posts/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -59,7 +59,7 @@ const YourNotes = ({ searchQuery }) => {
   const handleUpdate = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/posts/${noteToEdit._id}`,
+        `https://notes-backend-e62d.onrender.com/api/posts/${noteToEdit._id}`,
         {
           title: noteToEdit.title,
           content: noteToEdit.content,
@@ -83,7 +83,7 @@ const YourNotes = ({ searchQuery }) => {
   const fetchSearchNotes = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/posts/search?q=${searchQuery}`,
+        `https://notes-backend-e62d.onrender.com/api/posts/search?q=${searchQuery}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
