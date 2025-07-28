@@ -95,18 +95,20 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           >
             {darkMode ? <Sun /> : <Moon />}
           </button> */}
-          <img
-            src={
-              user?.profilePhoto ? (
-                `https://notes-backend-e62d.onrender.com/api/users/upload-photo${user.profilePhoto}?k=${refreshKey}`
-              ) : (
-                <CircleUserRound />
-              )
-            }
-            alt="Profile"
-            className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 shadow cursor-pointer"
-            onClick={handleProfileIconClick}
-          />
+          {user?.profilePhoto ? (
+  <img
+    src={`https://notes-backend-e62d.onrender.com/uploads/${user.profilePhoto}?k=${refreshKey}`}
+    alt="Profile"
+    className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 shadow cursor-pointer"
+    onClick={handleProfileIconClick}
+  />
+) : (
+  <CircleUserRound
+    className="w-7 h-7 text-gray-500 cursor-pointer"
+    onClick={handleProfileIconClick}
+  />
+)}
+
         </div>
 
         {/* Mobile: Sidebar Toggle */}
