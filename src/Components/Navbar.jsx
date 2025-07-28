@@ -186,15 +186,19 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           {/* Profile Photo */}
           <div className="flex flex-col items-center gap-3 mb-5">
             {/* Profile Image */}
-            <img
-              src={
-                user?.profilePhoto
-                  ? `http://localhost:5000${user.profilePhoto}?k=${refreshKey}`
-                  : "https://via.placeholder.com/100x100.png?text=Profile"
-              }
-              alt="Profile"
-              className="w-24 h-24 rounded-full object-cover border-2 border-gray-300 shadow"
-            />
+             {user?.profilePhoto ? (
+  <img
+    src={`https://notes-backend-e62d.onrender.com/uploads/${user.profilePhoto}?k=${refreshKey}`}
+    alt="Profile"
+    className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 shadow cursor-pointer"
+    onClick={handleProfileIconClick}
+  />
+) : (
+  <CircleUserRound
+    className="w-7 h-7 text-gray-500 cursor-pointer"
+    onClick={handleProfileIconClick}
+  />
+)}
             <p className="text-center text-gray-700 font-semibold text-lg mb-6">
               {user?.name || "Anonymous"}
             </p>
