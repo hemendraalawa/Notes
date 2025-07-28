@@ -98,7 +98,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
           <img
             src={
               user?.profilePhoto ? (
-                `http://localhost:5000${user.profilePhoto}?k=${refreshKey}`
+                `https://notes-backend-e62d.onrender.com/api/users/upload-photo${user.profilePhoto}?k=${refreshKey}`
               ) : (
                 <CircleUserRound />
               )
