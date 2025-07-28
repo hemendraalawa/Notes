@@ -190,7 +190,7 @@ const Navbar = ({ searchQuery, setSearchQuery }) => {
   <img
     src={`https://notes-backend-e62d.onrender.com/uploads/${user.profilePhoto}?k=${refreshKey}`}
     alt="Profile"
-    className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 shadow cursor-pointer"
+    className="w-24 h-24 rounded-full object-cover border-2 border-gray-300 shadow"
     onClick={handleProfileIconClick}
   />
 ) : (
